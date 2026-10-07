@@ -455,7 +455,7 @@ kbd{background:var(--sunk);border:1px solid var(--line);border-bottom-width:2px;
 
 <!-- CONFIGURATION : adresse et clé PUBLIQUE (anon) du projet Supabase. Ne jamais mettre la clé « service_role » ici. -->
 <script type="application/json" id="fls-config">
-{"supabaseUrl":"","supabaseAnonKey":"","bucket":"fls-voix","voixBase":"https://huggingface.co/rhasspy/piper-voices/resolve/main"}
+{"supabaseUrl":"https://zfqzvwpjxmrlctxsmxch.supabase.co","supabaseAnonKey":"sb_publishable_21JhJbzpINsSzFdD0oGqUw_BL_AtgSA","bucket":"fls-voix","voixBase":"https://huggingface.co/rhasspy/piper-voices/resolve/main"}
 </script>
 <!-- CONTENU PÉDAGOGIQUE : modifiable sans toucher au programme -->
 <script type="application/json" id="mm-data">
@@ -3893,7 +3893,7 @@ const DB={
   sess:null, online:false, err:'',
   ok(){ return !!(this.url&&this.key); },
   isProf(){ return !!(this.sess&&this.sess.access_token); },
-  h(auth,extra){ return Object.assign({apikey:this.key,Authorization:'Bearer '+(auth&&this.sess?this.sess.access_token:this.key)},extra||{}); },
+  h(auth,extra){ const o={apikey:this.key}; if(auth&&this.sess) o.Authorization='Bearer '+this.sess.access_token; else if(!/^sb_/.test(this.key)) o.Authorization='Bearer '+this.key; return Object.assign(o,extra||{}); },
   async req(path,opt){ opt=opt||{}; const r=await fetch(this.url+path,opt); if(!r.ok){ let t=''; try{ t=await r.text(); }catch(e){} throw new Error(r.status+' '+t.slice(0,200)); } const t=await r.text(); if(!t) return null; try{ return JSON.parse(t); }catch(e){ return t; } },
   /* ---- connexion du professeur ---- */
   loadSession(){ const s=Store.get('auth',null); if(s&&s.access_token) this.sess=s; },
